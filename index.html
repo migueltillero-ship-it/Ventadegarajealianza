@@ -245,6 +245,85 @@ const SEED_INVENTORY = {
     description: "Precio por unidad (rojas / de madera / de tela). Consulta disponibilidad al reservar.",
     image: "images/silla-roja.jpg",
     status: "available"
+  },
+
+  /* ---------- Galería de artículos individuales (PDF) ---------- */
+  proyector_dell: {
+    title: "Proyector Dell",
+    price: 500,
+    description: "Proyector Dell DLP en buen estado.",
+    image: "images/proyector-dell.jpg",
+    status: "available"
+  },
+  pizarron_blanco: {
+    title: "Pizarrón Blanco",
+    price: 400,
+    description: "Pizarrón blanco grande para pared.",
+    image: "images/pizarron.jpg",
+    status: "available"
+  },
+  proyector_steren: {
+    title: "Proyector Steren",
+    price: 400,
+    description: "Proyector Steren portátil.",
+    image: "images/proyector-steren.jpg",
+    status: "available"
+  },
+  silla_plegable_negra: {
+    title: "Silla Plegable Negra",
+    price: 100,
+    description: "Silla plegable de tela negra con marco metálico.",
+    image: "images/silla-plegable-negra.jpg",
+    status: "available"
+  },
+  impresora_epson: {
+    title: "Impresora Epson",
+    price: 400,
+    description: "Impresora multifuncional Epson.",
+    image: "images/impresora.jpg",
+    status: "available"
+  },
+  lampara: {
+    title: "Lámpara",
+    price: 150,
+    description: "Lámpara de pie/escritorio. Solicita foto al reservar.",
+    image: "images/sin-foto.svg",
+    status: "available"
+  },
+  silla_pequena_madera: {
+    title: "Silla Pequeña de Madera",
+    price: 100,
+    description: "Silla pequeña de madera, tipo infantil.",
+    image: "images/silla-madera.jpg",
+    status: "available"
+  },
+  silla_plegable_madera: {
+    title: "Silla Plegable de Madera Oscura",
+    price: 100,
+    description: "Silla plegable de madera oscura.",
+    image: "images/silla-baja-oscura.jpg",
+    status: "available"
+  },
+  silla_plegable_acolchada: {
+    title: "Silla Plegable Acolchada",
+    price: 100,
+    description: "Silla plegable acolchada negra con marco cromado.",
+    image: "images/silla-cromada-negra.jpg",
+    status: "available"
+  },
+  sofa_tres_plazas: {
+    title: "Sofá de Tres Plazas",
+    price: 0,
+    description: "Sofá/banca de tres plazas con cojines negros. Precio a negociar.",
+    image: "images/banca-tela-negra.jpg",
+    status: "available"
+  },
+  archivero_cajonera: {
+    title: "Archivero / Cajonera",
+    price: 700,
+    description: "Archivero metálico con cajones. Solicita foto al reservar.",
+    image: "images/sin-foto.svg",
+    status: "available"
   }
 };
 
@@ -429,9 +508,11 @@ function cardHTML(id, item) {
     sold:      { color: "bg-red-500",    text: "Vendido",    ring: "ring-red-200" }
   }[item.status] || { color: "bg-gray-400", text: "—", ring: "ring-gray-200" };
 
-  const priceFmt = new Intl.NumberFormat("es-MX", {
-    style: "currency", currency: "MXN", minimumFractionDigits: 2
-  }).format(item.price || 0);
+  const priceFmt = (item.price && item.price > 0)
+    ? new Intl.NumberFormat("es-MX", {
+        style: "currency", currency: "MXN", minimumFractionDigits: 2
+      }).format(item.price)
+    : "Precio a negociar";
 
   // Acciones públicas
   let publicAction = "";
