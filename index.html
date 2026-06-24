@@ -159,6 +159,7 @@ const SEED_INVENTORY = {
   escritorio: {
     title: "Escritorio Grande",
     price: 3000,
+    stock: 1,
     description: "Escritorio grande de madera oscura.",
     image: "images/escritorio.jpg",
     status: "available"
@@ -166,6 +167,7 @@ const SEED_INVENTORY = {
   lockers: {
     title: "Lockers",
     price: 700,
+    stock: 2,
     description: "Locker de madera con 2 puertas y manijas.",
     image: "images/lockers.jpg",
     status: "available"
@@ -173,27 +175,31 @@ const SEED_INVENTORY = {
   mesa_grande: {
     title: "Mesa Grande",
     price: 600,
-    description: "Mesa grande de madera, robusta. 2 disponibles. Indica al reservar si quieres 1 o 2.",
+    stock: 7,
+    description: "Mesa grande de madera, robusta.",
     image: "images/mesa-grande.jpg",
     status: "available"
   },
   mesa_mediana: {
     title: "Mesa Mediana",
     price: 500,
-    description: "Mesa mediana multifuncional. 2 disponibles. Indica al reservar si quieres 1 o 2.",
+    stock: 18,
+    description: "Mesa mediana multifuncional.",
     image: "images/mesa-grande.jpg",
     status: "available"
   },
   mesa_redonda: {
     title: "Mesa Redonda",
     price: 200,
-    description: "Mesa redonda de madera oscura, base de tres patas.",
+    stock: 2,
+    description: "Mesa redonda de madera oscura (una grande y una pequeña disponibles).",
     image: "images/mesa-redonda.jpg",
     status: "available"
   },
   mesa_chica: {
     title: "Mesa Chica",
     price: 200,
+    stock: 8,
     description: "Mesa pequeña de madera, ideal para esquina o auxiliar.",
     image: "images/mesa-chica.jpg",
     status: "available"
@@ -201,6 +207,7 @@ const SEED_INVENTORY = {
   librero_grande: {
     title: "Librero Grande",
     price: 600,
+    stock: 1,
     description: "Librero de madera de gran tamaño.",
     image: "images/librero-grande.jpg",
     status: "available"
@@ -208,6 +215,7 @@ const SEED_INVENTORY = {
   librero_mediano: {
     title: "Librero Mediano",
     price: 400,
+    stock: 1,
     description: "Librero de madera, tamaño medio.",
     image: "images/librero-mediano.jpg",
     status: "available"
@@ -215,20 +223,23 @@ const SEED_INVENTORY = {
   librero_chico: {
     title: "Librero Chico",
     price: 200,
+    stock: 1,
     description: "Librero pequeño de madera clara.",
     image: "images/librero-chico.jpg",
     status: "available"
   },
   sillas_cromadas: {
-    title: "Sillas Cromadas",
+    title: "Sillas Cromadas / Metálicas",
     price: 300,
-    description: "Precio por unidad. Consulta disponibilidad al reservar.",
+    stock: 12,
+    description: "Precio por unidad.",
     image: "images/silla-cromada-gris.jpg",
     status: "available"
   },
   sillas_rojas_madera_tela: {
     title: "Sillas Rojas, de Madera, Tela",
     price: 100,
+    stock: 1,
     description: "Precio por unidad (rojas / de madera / de tela). Consulta disponibilidad al reservar.",
     image: "images/silla-roja.jpg",
     status: "available"
@@ -238,13 +249,15 @@ const SEED_INVENTORY = {
   proyector_dell: {
     title: "Proyector Dell",
     price: 500,
+    stock: 1,
     description: "Proyector Dell DLP en buen estado.",
     image: "images/proyector-dell.jpg",
     status: "available"
   },
   pizarron_blanco: {
-    title: "Pizarrón Blanco",
+    title: "Pizarrón Blanco Grande",
     price: 400,
+    stock: 3,
     description: "Pizarrón blanco grande para pared.",
     image: "images/pizarron.jpg",
     status: "available"
@@ -252,6 +265,7 @@ const SEED_INVENTORY = {
   proyector_steren: {
     title: "Proyector Steren",
     price: 400,
+    stock: 1,
     description: "Proyector Steren portátil.",
     image: "images/proyector-steren.jpg",
     status: "available"
@@ -259,6 +273,7 @@ const SEED_INVENTORY = {
   silla_plegable_negra: {
     title: "Silla Plegable Negra",
     price: 100,
+    stock: 1,
     description: "Silla plegable de tela negra con marco metálico.",
     image: "images/silla-plegable-negra.jpg",
     status: "available"
@@ -266,13 +281,15 @@ const SEED_INVENTORY = {
   impresora_epson: {
     title: "Impresora Epson",
     price: 400,
+    stock: 1,
     description: "Impresora multifuncional Epson.",
     image: "images/impresora.jpg",
     status: "available"
   },
   silla_pequena_madera: {
-    title: "Silla Pequeña de Madera",
+    title: "Silla de Niños (Madera)",
     price: 100,
+    stock: 11,
     description: "Silla pequeña de madera, tipo infantil.",
     image: "images/silla-madera.jpg",
     status: "available"
@@ -280,6 +297,7 @@ const SEED_INVENTORY = {
   silla_plegable_madera: {
     title: "Silla Plegable de Madera Oscura",
     price: 100,
+    stock: 0,
     description: "Silla plegable de madera oscura. (14 unidades — VENDIDAS)",
     image: "images/silla-baja-oscura.jpg",
     status: "sold"
@@ -287,6 +305,7 @@ const SEED_INVENTORY = {
   silla_plegable_acolchada: {
     title: "Silla Plegable Acolchada",
     price: 100,
+    stock: 1,
     description: "Silla plegable acolchada negra con marco cromado.",
     image: "images/silla-cromada-negra.jpg",
     status: "available"
@@ -294,6 +313,7 @@ const SEED_INVENTORY = {
   sofa_tres_plazas: {
     title: "Sofá de Tres Plazas",
     price: 0,
+    stock: 1,
     description: "Sofá/banca de tres plazas con cojines negros. Precio a negociar.",
     image: "images/banca-tela-negra.jpg",
     status: "available"
@@ -301,6 +321,7 @@ const SEED_INVENTORY = {
   archivero_cajonera: {
     title: "Cajonera",
     price: 600,
+    stock: 1,
     description: "Cajonera de madera oscura (la que está debajo de la impresora).",
     image: "images/cajonera.jpg",
     status: "available"
@@ -466,6 +487,12 @@ function render() {
   catalog.querySelectorAll("[data-action='available']").forEach(btn => {
     btn.addEventListener("click", () => updateStatus(btn.dataset.id, "available", true));
   });
+  catalog.querySelectorAll("[data-action='stock-minus']").forEach(btn => {
+    btn.addEventListener("click", () => adjustStock(btn.dataset.id, -1));
+  });
+  catalog.querySelectorAll("[data-action='stock-plus']").forEach(btn => {
+    btn.addEventListener("click", () => adjustStock(btn.dataset.id, +1));
+  });
 }
 
 async function updateStatus(id, newStatus, clearReservation = false) {
@@ -478,6 +505,23 @@ async function updateStatus(id, newStatus, clearReservation = false) {
   } catch (e) {
     console.error(e);
     toast("Error al actualizar.", true);
+  }
+}
+
+async function adjustStock(id, delta) {
+  if (!isAdmin) return;
+  const item = itemsData[id] || {};
+  const current = Number.isFinite(item.stock) ? item.stock : 1;
+  const next = Math.max(0, current + delta);
+  const payload = { stock: next };
+  // Si el stock llega a 0, marca como vendido. Si sube desde 0, vuelve a disponible.
+  if (next === 0 && item.status !== "sold") payload.status = "sold";
+  if (next > 0 && item.status === "sold")   payload.status = "available";
+  try {
+    await update(ref(db, `items/${id}`), payload);
+  } catch (e) {
+    console.error(e);
+    toast("Error al ajustar stock.", true);
   }
 }
 
@@ -494,9 +538,20 @@ function cardHTML(id, item) {
       }).format(item.price)
     : "Precio a negociar";
 
+  // Stock
+  const stock = Number.isFinite(item.stock) ? item.stock : 1;
+  let stockBadge = "";
+  if (item.status === "sold" || stock <= 0) {
+    stockBadge = `<span class="inline-block text-xs font-semibold bg-red-100 text-red-700 px-2 py-1 rounded-full">Agotado</span>`;
+  } else if (stock === 1) {
+    stockBadge = `<span class="inline-block text-xs font-semibold bg-amber-100 text-amber-800 px-2 py-1 rounded-full">Última pieza</span>`;
+  } else {
+    stockBadge = `<span class="inline-block text-xs font-semibold bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full">${stock} disponibles</span>`;
+  }
+
   // Acciones públicas
   let publicAction = "";
-  if (item.status === "available") {
+  if (item.status === "available" && stock > 0) {
     publicAction = `
       <button data-action="reserve" data-id="${id}"
         class="w-full af-blue text-white font-semibold py-2 rounded-lg hover:opacity-90 transition">
@@ -529,6 +584,16 @@ function cardHTML(id, item) {
     adminBlock = `
       <div class="mt-3 pt-3 border-t border-gray-200">
         ${resInfo}
+        <div class="flex items-center justify-between bg-gray-50 rounded-lg px-2 py-1 mb-2">
+          <span class="text-xs font-semibold text-gray-600">Stock:</span>
+          <div class="flex items-center gap-2">
+            <button data-action="stock-minus" data-id="${id}"
+              class="w-7 h-7 rounded-full bg-gray-200 hover:bg-gray-300 font-bold">−</button>
+            <span class="font-bold text-gray-800 min-w-[1.5rem] text-center">${stock}</span>
+            <button data-action="stock-plus" data-id="${id}"
+              class="w-7 h-7 rounded-full bg-gray-200 hover:bg-gray-300 font-bold">+</button>
+          </div>
+        </div>
         <div class="flex flex-col gap-2">
           ${item.status !== "sold" ? `
             <button data-action="sold" data-id="${id}"
@@ -555,8 +620,9 @@ function cardHTML(id, item) {
       <div class="p-4 flex-1 flex flex-col">
         <h3 class="font-bold text-lg af-blue-text">${escapeHTML(item.title)}</h3>
         <p class="text-sm text-gray-500 flex-1 mt-1">${escapeHTML(item.description || '')}</p>
-        <div class="mt-3 mb-3">
+        <div class="mt-3 mb-3 flex items-center justify-between gap-2 flex-wrap">
           <span class="text-2xl font-extrabold text-gray-900">${priceFmt}</span>
+          ${stockBadge}
         </div>
         ${publicAction}
         ${adminBlock}
