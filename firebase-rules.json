@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "items": {
+      ".read": true,
+      ".write": true,
+      "$itemId": {
+        ".validate": "newData.hasChildren(['title','price','status'])",
+        "title":  { ".validate": "newData.isString()" },
+        "price":  { ".validate": "newData.isNumber()" },
+        "status": { ".validate": "newData.isString() && newData.val().matches(/^(available|reserved|sold)$/)" },
+        "image":  { ".validate": "newData.isString()" },
+        "description": { ".validate": "newData.isString()" },
+        "reservation": {
+          "name":      { ".validate": "newData.isString()" },
+          "contact":   { ".validate": "newData.isString()" },
+          "timestamp": { ".validate": "newData.isNumber()" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Venta de Garaje Institucional · Alliance Française</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: 'Montserrat', system-ui, sans-serif; }
+  .af-blue { background-color: #0055A4; }
+  .af-red  { background-color: #EF4135; }
+  .af-blue-text { color: #0055A4; }
+  .card-img { aspect-ratio: 4/3; object-fit: cover; background:#f3f4f6; }
+  .badge { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; }
+  .pulse-dot { animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .modal-backdrop { background: rgba(0,0,0,.55); }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+<!-- ====== ENCABEZADO ====== -->
+<header class="af-blue text-white shadow-lg">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="text-center sm:text-left">
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Venta de Garaje Institucional</h1>
+      <p class="text-blue-100 text-sm sm:text-base">Alliance Française · Catálogo de mobiliario</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="connection-status" class="text-xs bg-white/10 px-3 py-1 rounded-full flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-yellow-400 pulse-dot"></span> Conectando…
+      </span>
+      <button id="admin-toggle" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full transition">
+        Admin
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ====== BANNER ADMIN ====== -->
+<div id="admin-banner" class="hidden af-red text-white text-center py-2 text-sm font-semibold">
+  Modo Administrador activado ·
+  <button id="admin-logout" class="underline ml-2">Cerrar sesión</button>
+</div>
+
+<!-- ====== INSTRUCCIONES ====== -->
+<section class="max-w-6xl mx-auto px-4 pt-6">
+  <div class="bg-white border-l-4 border-blue-600 rounded-r-lg p-4 shadow-sm">
+    <p class="text-sm text-gray-700">
+      <span class="font-bold af-blue-text">¿Cómo funciona?</span>
+      Si un artículo está <span class="font-semibold text-green-700">disponible</span>, presiona
+      <span class="font-semibold">Reservar</span> y deja tus datos de contacto. Nos comunicaremos contigo
+      para coordinar el pago y la entrega. Los precios son fijos.
+    </p>
+  </div>
+</section>
+
+<!-- ====== LEYENDA ====== -->
+<section class="max-w-6xl mx-auto px-4 pt-4 flex flex-wrap gap-4 text-xs">
+  <span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span>Disponible</span>
+  <span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400"></span>Reservado</span>
+  <span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span>Vendido</span>
+</section>
+
+<!-- ====== GALERÍA ====== -->
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <div id="catalog" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Tarjetas se inyectan aquí -->
+    <div class="text-center text-gray-400 col-span-full py-12" id="loading-state">
+      Cargando catálogo…
+    </div>
+  </div>
+</main>
+
+<!-- ====== PIE ====== -->
+<footer class="text-center text-xs text-gray-500 py-8 px-4">
+  © <span id="year"></span> Alliance Française · Venta institucional de mobiliario.
+</footer>
+
+<!-- ====== MODAL: RESERVAR ====== -->
+<div id="reserve-modal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+    <h2 class="text-xl font-bold af-blue-text mb-1">Reservar artículo</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Vas a reservar: <span id="reserve-item-title" class="font-semibold"></span>
+    </p>
+    <form id="reserve-form" class="space-y-3">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Nombre completo</label>
+        <input required name="name" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Teléfono o correo</label>
+        <input required name="contact" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="55 1234 5678 o correo@dominio.com" />
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" id="reserve-cancel" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+        <button type="submit" class="px-4 py-2 af-blue text-white font-semibold rounded-lg hover:opacity-90">Confirmar reserva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ====== MODAL: LOGIN ADMIN ====== -->
+<div id="admin-modal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6">
+    <h2 class="text-xl font-bold af-blue-text mb-3">Acceso administrador</h2>
+    <form id="admin-form" class="space-y-3">
+      <input id="admin-pass" type="password" placeholder="Contraseña" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <div class="flex justify-end gap-2">
+        <button type="button" id="admin-cancel" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+        <button type="submit" class="px-4 py-2 af-blue text-white font-semibold rounded-lg hover:opacity-90">Entrar</button>
+      </div>
+      <p id="admin-error" class="hidden text-sm text-red-600">Contraseña incorrecta.</p>
+    </form>
+  </div>
+</div>
+
+<!-- ====== TOAST ====== -->
+<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-full text-sm shadow-lg z-50"></div>
+
+<!-- ====== FIREBASE SDK ====== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getDatabase, ref, onValue, set, update, get, child
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* =================================================================
+   1) CONFIGURACIÓN DE FIREBASE
+   -----------------------------------------------------------------
+   Reemplaza los valores de abajo con los de tu propio proyecto.
+   (Console Firebase → Configuración del proyecto → Tus apps → Web)
+================================================================= */
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_PROYECTO.firebaseapp.com",
+  databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+  projectId: "TU_PROYECTO",
+  storageBucket: "TU_PROYECTO.appspot.com",
+  messagingSenderId: "XXXXXXXXXX",
+  appId: "1:XXXXXXXXXX:web:XXXXXXXXXXXXXX"
+};
+
+/* =================================================================
+   2) CONTRASEÑA DE ADMINISTRADOR (estática, sencilla)
+   Cámbiala antes de publicar.
+================================================================= */
+const ADMIN_PASSWORD = "alliance2026";
+
+/* =================================================================
+   3) INVENTARIO INICIAL (se carga en la base si está vacía)
+================================================================= */
+const SEED_INVENTORY = {
+  escritorio: {
+    title: "Escritorio",
+    price: 3000,
+    description: "Escritorio de oficina, ideal para estudio o trabajo en casa.",
+    image: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=70",
+    status: "available"
+  },
+  lockers: {
+    title: "Lockers",
+    price: 700,
+    description: "Lockers metálicos para almacenamiento.",
+    image: "https://images.unsplash.com/photo-1606166325683-e6deb697d301?auto=format&fit=crop&w=800&q=70",
+    status: "available"
+  },
+  mesas_grandes: {
+    title: "Mesas Grandes",
+    price: 600,
+    description: "Mesas grandes de trabajo, robustas.",
+    image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=70",
+    status: "available"
+  },
+  mesas_medianas: {
+    title: "Mesas Medianas",
+    price: 500,
+    description: "Mesas medianas multifuncionales.",
+    image: "https://images.unsplash.com/photo-1554295405-abb8fd54f153?auto=format&fit=crop&w=800&q=70",
+    status: "available"
+  },
+  sillas_plegables: {
+    title: "Sillas Plegables Negras",
+    price: 100,
+    description: "Sillas plegables negras, prácticas y ligeras.",
+    image: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=70",
+    status: "available"
+  },
+  libreros: {
+    title: "Libreros de Madera",
+    price: 600,
+    description: "Libreros de madera para libros y decoración.",
+    image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=70",
+    status: "available"
+  }
+};
+
+/* ================================================================= */
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+const itemsRef = ref(db, "items");
+
+/* ---------- Estado UI ---------- */
+let isAdmin   = false;
+let itemsData = {};
+let pendingReserveId = null;
+
+const $ = (sel) => document.querySelector(sel);
+const catalog       = $("#catalog");
+const connStatus    = $("#connection-status");
+const adminBanner   = $("#admin-banner");
+const reserveModal  = $("#reserve-modal");
+const adminModal    = $("#admin-modal");
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ---------- Admin: por URL (?admin=true) o por botón ---------- */
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("admin") === "true" || sessionStorage.getItem("af_admin") === "1") {
+  openAdminPrompt(true);
+}
+
+$("#admin-toggle").addEventListener("click", () => openAdminPrompt(false));
+$("#admin-cancel").addEventListener("click", () => adminModal.classList.add("hidden"));
+$("#admin-logout").addEventListener("click", () => {
+  isAdmin = false;
+  sessionStorage.removeItem("af_admin");
+  adminBanner.classList.add("hidden");
+  render();
+});
+
+$("#admin-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const val = $("#admin-pass").value;
+  if (val === ADMIN_PASSWORD) {
+    isAdmin = true;
+    sessionStorage.setItem("af_admin", "1");
+    adminBanner.classList.remove("hidden");
+    adminModal.classList.add("hidden");
+    $("#admin-pass").value = "";
+    $("#admin-error").classList.add("hidden");
+    render();
+  } else {
+    $("#admin-error").classList.remove("hidden");
+  }
+});
+
+function openAdminPrompt(auto) {
+  if (sessionStorage.getItem("af_admin") === "1") {
+    isAdmin = true;
+    adminBanner.classList.remove("hidden");
+    render();
+    return;
+  }
+  if (auto) {
+    // Sólo mostramos el modal si no estaba autenticado.
+  }
+  adminModal.classList.remove("hidden");
+  setTimeout(() => $("#admin-pass").focus(), 50);
+}
+
+/* ---------- Reserva: modal ---------- */
+$("#reserve-cancel").addEventListener("click", () => {
+  reserveModal.classList.add("hidden");
+  pendingReserveId = null;
+});
+
+$("#reserve-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!pendingReserveId) return;
+  const fd = new FormData(e.target);
+  const name    = fd.get("name").toString().trim();
+  const contact = fd.get("contact").toString().trim();
+  if (!name || !contact) return;
+
+  try {
+    await update(ref(db, `items/${pendingReserveId}`), {
+      status: "reserved",
+      reservation: {
+        name, contact,
+        timestamp: Date.now()
+      }
+    });
+    reserveModal.classList.add("hidden");
+    e.target.reset();
+    pendingReserveId = null;
+    toast("¡Reserva confirmada! Te contactaremos pronto.");
+  } catch (err) {
+    console.error(err);
+    toast("Error al reservar. Intenta de nuevo.", true);
+  }
+});
+
+/* ---------- Carga inicial / Seed ---------- */
+async function seedIfEmpty() {
+  const snap = await get(itemsRef);
+  if (!snap.exists()) {
+    await set(itemsRef, SEED_INVENTORY);
+    console.log("Inventario inicial cargado.");
+  }
+}
+
+seedIfEmpty().catch(err => {
+  console.error("No se pudo verificar/sembrar el inventario:", err);
+  // No interrumpe la app: las reglas pueden impedir el seed si ya existe.
+});
+
+/* ---------- Suscripción en tiempo real ---------- */
+onValue(itemsRef, (snap) => {
+  itemsData = snap.val() || {};
+  setConnected(true);
+  render();
+}, (err) => {
+  console.error(err);
+  setConnected(false);
+  catalog.innerHTML = `
+    <div class="col-span-full bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+      No se pudo conectar a la base de datos. Revisa la configuración de Firebase
+      y las reglas de seguridad.
+    </div>`;
+});
+
+function setConnected(ok) {
+  connStatus.innerHTML = ok
+    ? `<span class="w-2 h-2 rounded-full bg-green-400"></span> En vivo`
+    : `<span class="w-2 h-2 rounded-full bg-red-500"></span> Sin conexión`;
+}
+
+/* ---------- Render ---------- */
+function render() {
+  const ids = Object.keys(itemsData);
+  if (ids.length === 0) {
+    catalog.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12">
+      No hay artículos en el catálogo.
+    </div>`;
+    return;
+  }
+
+  catalog.innerHTML = ids.map(id => cardHTML(id, itemsData[id])).join("");
+
+  // Vincular eventos
+  catalog.querySelectorAll("[data-action='reserve']").forEach(btn => {
+    btn.addEventListener("click", () => {
+      pendingReserveId = btn.dataset.id;
+      $("#reserve-item-title").textContent = itemsData[pendingReserveId].title;
+      reserveModal.classList.remove("hidden");
+    });
+  });
+
+  catalog.querySelectorAll("[data-action='sold']").forEach(btn => {
+    btn.addEventListener("click", () => updateStatus(btn.dataset.id, "sold"));
+  });
+  catalog.querySelectorAll("[data-action='available']").forEach(btn => {
+    btn.addEventListener("click", () => updateStatus(btn.dataset.id, "available", true));
+  });
+}
+
+async function updateStatus(id, newStatus, clearReservation = false) {
+  if (!isAdmin) return;
+  const payload = { status: newStatus };
+  if (clearReservation) payload.reservation = null;
+  try {
+    await update(ref(db, `items/${id}`), payload);
+    toast("Estado actualizado.");
+  } catch (e) {
+    console.error(e);
+    toast("Error al actualizar.", true);
+  }
+}
+
+function cardHTML(id, item) {
+  const statusInfo = {
+    available: { color: "bg-green-500",  text: "Disponible", ring: "ring-green-200" },
+    reserved:  { color: "bg-yellow-400", text: "Reservado",  ring: "ring-yellow-200" },
+    sold:      { color: "bg-red-500",    text: "Vendido",    ring: "ring-red-200" }
+  }[item.status] || { color: "bg-gray-400", text: "—", ring: "ring-gray-200" };
+
+  const priceFmt = new Intl.NumberFormat("es-MX", {
+    style: "currency", currency: "MXN", minimumFractionDigits: 2
+  }).format(item.price || 0);
+
+  // Acciones públicas
+  let publicAction = "";
+  if (item.status === "available") {
+    publicAction = `
+      <button data-action="reserve" data-id="${id}"
+        class="w-full af-blue text-white font-semibold py-2 rounded-lg hover:opacity-90 transition">
+        Reservar
+      </button>`;
+  } else if (item.status === "reserved") {
+    publicAction = `
+      <button disabled class="w-full bg-yellow-100 text-yellow-800 font-semibold py-2 rounded-lg cursor-not-allowed">
+        Reservado
+      </button>`;
+  } else {
+    publicAction = `
+      <button disabled class="w-full bg-red-100 text-red-700 font-semibold py-2 rounded-lg cursor-not-allowed">
+        Vendido
+      </button>`;
+  }
+
+  // Bloque admin
+  let adminBlock = "";
+  if (isAdmin) {
+    const res = item.reservation;
+    const resInfo = res
+      ? `<div class="text-xs bg-yellow-50 border border-yellow-200 rounded p-2 mb-2">
+           <div><span class="font-semibold">Reservó:</span> ${escapeHTML(res.name)}</div>
+           <div><span class="font-semibold">Contacto:</span> ${escapeHTML(res.contact)}</div>
+           <div class="text-gray-500">${new Date(res.timestamp).toLocaleString("es-MX")}</div>
+         </div>`
+      : "";
+
+    adminBlock = `
+      <div class="mt-3 pt-3 border-t border-gray-200">
+        ${resInfo}
+        <div class="flex flex-col gap-2">
+          ${item.status !== "sold" ? `
+            <button data-action="sold" data-id="${id}"
+              class="w-full af-red text-white text-sm font-semibold py-1.5 rounded hover:opacity-90">
+              Marcar como Vendido
+            </button>` : ""}
+          ${item.status !== "available" ? `
+            <button data-action="available" data-id="${id}"
+              class="w-full bg-gray-200 text-gray-700 text-sm font-semibold py-1.5 rounded hover:bg-gray-300">
+              Volver a Disponible
+            </button>` : ""}
+        </div>
+      </div>`;
+  }
+
+  return `
+    <article class="bg-white rounded-2xl shadow-md overflow-hidden ring-4 ${statusInfo.ring} flex flex-col">
+      <div class="relative">
+        <img src="${escapeHTML(item.image || '')}" alt="${escapeHTML(item.title)}" class="w-full card-img" onerror="this.src='https://via.placeholder.com/600x450?text=Sin+imagen'" />
+        <span class="absolute top-3 left-3 ${statusInfo.color} text-white badge px-2 py-1 rounded-full uppercase">
+          ${statusInfo.text}
+        </span>
+      </div>
+      <div class="p-4 flex-1 flex flex-col">
+        <h3 class="font-bold text-lg af-blue-text">${escapeHTML(item.title)}</h3>
+        <p class="text-sm text-gray-500 flex-1 mt-1">${escapeHTML(item.description || '')}</p>
+        <div class="mt-3 mb-3">
+          <span class="text-2xl font-extrabold text-gray-900">${priceFmt}</span>
+        </div>
+        ${publicAction}
+        ${adminBlock}
+      </div>
+    </article>
+  `;
+}
+
+/* ---------- Helpers ---------- */
+function escapeHTML(str) {
+  return String(str ?? "")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+
+let toastTimer;
+function toast(msg, isError = false) {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.toggle("bg-red-600", isError);
+  el.classList.toggle("bg-gray-900", !isError);
+  el.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.add("hidden"), 2800);
+}
+</script>
+</body>
+</html>
